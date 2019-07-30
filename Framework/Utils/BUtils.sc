@@ -52,7 +52,7 @@ BUtils
 	}
 
 	*materialDir {
-		^Platform.userExtensionDir ++ "/EPOC/Material/";
+		^Platform.userAppSupportDir ++ "/downloaded-quarks/EPOC/Material/";
 	}
 
 	*loadLiveObjects {
