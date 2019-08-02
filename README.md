@@ -3,6 +3,8 @@ A SuperCollider framework that addresses interaction and relationships between m
 
 ![alt text](https://bjarnig.s3.eu-central-1.amazonaws.com/images/epoc-git.png)
 
+```javascript
+
 /* Install EPOC */
 
 Quarks.install("https://github.com/bjarnig/EPOC")
@@ -30,3 +32,5 @@ BUtils.loadLiveObjects;
 /* Load an editor for the objects */
 
 EpocEditor.view(~items, List());
+
+```
