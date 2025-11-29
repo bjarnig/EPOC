@@ -1,34 +1,34 @@
 
 BPchou : Bpat
 {
-	var <>outBus, <>amp, <>speed, <>brownStep, <>durFrom, <>durTo, <>sampleStart, 
+	var <>outBus, <>amp, <>speed, <>brownStep, <>durFrom, <>durTo, <>sampleStart,
 	<>sampleEnd, <>grainAttack, <>grainRelease, <>cloudAttack, <>cloudRelease, <>rate, <>buffer;
-	
-	*new { |outBus=0, amp=0.7, speed=0.1, brownStep=0.001, durFrom=0.1, durTo=1.5, 	sampleStart=0.0, sampleEnd=0.4, grainAttack=0.01, grainRelease=0.2, cloudAttack=8, 	cloudRelease=12, rate=1, buffer=0| 
-		^super.newCopyArgs(nil, outBus, amp, speed, brownStep, durFrom, durTo, sampleStart, 
-		sampleEnd, grainAttack, grainRelease, cloudAttack, cloudRelease, rate, buffer).init(); 
+
+	*new { |outBus=0, amp=0.7, speed=0.1, brownStep=0.001, durFrom=0.1, durTo=1.5, 	sampleStart=0.0, sampleEnd=0.4, grainAttack=0.01, grainRelease=0.2, cloudAttack=8, 	cloudRelease=12, rate=1, buffer=0|
+		^super.newCopyArgs(nil, outBus, amp, speed, brownStep, durFrom, durTo, sampleStart,
+		sampleEnd, grainAttack, grainRelease, cloudAttack, cloudRelease, rate, buffer).init();
 	}
-	
+
 	init {
 		this.setDescription;
 	}
-	
+
 	*loadSynthDefs {
-		
-	 	SynthDef(\chou, 
+
+	 	SynthDef(\chou,
 		{|bus = 0, amp=0.1, pan=0, grdur=0.1, atk=0.01, rel=0.1, rate=1, offset=0, buf|
 		var env = EnvGen.ar(Env.linen(atk, grdur-atk-rel, rel, amp), doneAction:2);
 		var signal = PlayBuf.ar(1,buf, rate*BufRateScale.ir(buf), 1, offset*BufFrames.ir(buf), 0);
 		signal = signal * env;
 		signal = HPF.ar(signal, 80);
 		OffsetOut.ar(bus, Pan2.ar(signal, pan + rrand(-0.3, 0.3)));
-		}).add; 
+		}).add;
 	}
-	
+
 	play {
-		
+
 		var pat1, pat2, pat3, pat4;
-	
+
 		pat1 = Pbind(
 		\instrument, 'chou',
 		\dur, Env.new([speed/2, speed, speed * 2], [cloudAttack*1.2, cloudRelease], 'linear'),
@@ -80,10 +80,10 @@ BPchou : Bpat
 		\pan, Pbeta(-0.4, 0.4, 0.6, 0.4),
 		\rate, rate/2
 		);
-	
+
 		Ppar([pat1, pat2, pat3, pat4]).play;
 	}
-	
+
 		setDescription {
 		description = "BPchou: Pattern based granulation.";
 	}

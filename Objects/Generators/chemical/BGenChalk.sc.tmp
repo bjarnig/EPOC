@@ -1,0 +1,69 @@
+
+BGenChalk : BGen
+{
+	var paramValues, <>sound, <>positions, reverb, buf, effectBus, <>isPlaying, preControl;
+
+	*new { |id=0, description, duration=10, control, outBus=0, positions, values, sound, buf,load=1|
+		^super.newCopyArgs(id, description, duration, control, outBus, nil, values, sound, positions).init(load);
+	}
+
+	init {|load=1|
+
+		this.setDescription;
+		this.isPlaying = 0;
+		preControl = BControl.new;
+		if(this.control.isNil, {this.control = BControl.new});
+
+		if(load > 0, {
+		Routine {
+			if(sound.isNil, {this.sound = BConstants.monoSnd});
+			if(positions.isNil, {this.positions = [0.85, 0.9, 0.95, 1, 0.95, 0.9, 0.85, 0.9]});
+			buf = Buffer.read(Server.local, sound);
+			Server.local.sync;
+			this.initEffect.value; }.play;
+		});
+	}
+
+	setParam {|paramName, paramValue|
+		if(paramName == \duration, {duration = paramValue});
+		if(paramName == \sound, {this.sound = paramValue;});
+		if(paramName == \positions, {this.positions = paramValue;});
+		if(paramName == \outBus, {outBus = paramValue});
+	}
+
+	setParamAndUpdate {|param, value|
+	if(this.isPlaying > 0,
+	{control.setParamValue(param, value);
+	this.update.value;})}
+
+	initEffect {
+		effectBus = Bus.audio(Server.local, 2);
+		reverb = Bwrap.new(\chalkVerb, [\in, effectBus, \out, outBus]);
+		reverb.play;
+	}
+
+	*loadSynthDefs {
+
+	 	SynthDef(\chalkGrain,
+		{|buf=0, outBus, rate=1, trate=12, grDur=0.5, pos=0.1, atk=4, sus=5, rel=6, amp=1, lopass=19000, hipass=80, entropy=0.0, pan=0.99999, dist=0.0, dvol=1.0, svol=1.0,
+		positions = #[0.85, 0.9, 0.95, 1, 0.95, 0.9, 0.85, 0.9]|
+		var clk, signal, env, filtEnv, distSignal, seq, trig, seqPos;
+
+		clk = Impulse.kr(trate);
+		pos = pos * BufDur.kr(buf);
+	 	seq = Dseq(pos * positions, inf);
+		trig = Impulse.kr((15 * entropy) + 0.001);
+		seqPos = Demand.kr(trig, 0, seq);
+		env = EnvGen.ar(Env.new([0,1,1,0],[atk,sus,rel]), doneAction:2);
+		filtEnv = EnvGen.ar(Env.new([0,1,1,0],[atk/4,sus,rel/1.2], [-8]), doneAction:2);
+		signal = TGrains.ar(2, clk, buf, rate, seqPos, grDur, pan, 2.0);
+		signal = ((((signal * env) * amp) * dvol) * svol);
+		signal = LeakDC.ar(signal);
+		distSignal = HPF.ar(SoftClipAmp8.ar(signal, pregain:170) * 0.1, 8000) + LPF.ar(SoftClipAmp8.ar(signal, pregain:270) * 0.1, 100);
+		signal = (signal * (1-dist))  + (distSignal * dist);
+		signal = HPF.ar(signal, hipass);
+		signal = LPF.ar(signal, lopass + ((20000 - lopass) * filtEnv));
+		Out.ar(outBus, signal);
+		}).add;
+
+		SynthDef(\chalkVerb, {|in=0, out=0, mix=0.01, d1 = 0.80, d2 = 0.82, d3 = 0.84, d4 = 0.86, d5 = 0.88,

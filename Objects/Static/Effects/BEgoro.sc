@@ -1,19 +1,19 @@
 
 BEgoro : Beffect
-{ 		
+{
 	*new { |values|
 		^super.newCopyArgs(nil).init(values);
 	}
-	
+
 	init {|values|
 		wrap = Bwrap.new(\goro, values);
 		this.setDescription;
 	}
-	
-	*loadSynthDefs { 
-	
+
+	*loadSynthDefs {
+
 	SynthDef("goro",{| Êd1 = 0.1, d2 = 0.1, d3 = 0.1, d4 = 0.1, d5 = 0.1,
-Ê Ê Êt1 = 1, t2 = 2, t3 = 3, t4 = 4, t5 = 5, f1 = 20000, f2 = 20000, f3 = 20000, f4 = 20000, 
+Ê Ê Êt1 = 1, t2 = 2, t3 = 3, t4 = 4, t5 = 5, f1 = 20000, f2 = 20000, f3 = 20000, f4 = 20000,
 	f5 = 20000, inBus = 3, outBus = 0, amp=0.8, delayMult=1.0, decayMult=1.0, filtMult=1.0|
 Ê Ê Ê Ê Ê Ê Ê Ê Ê Ê Ê Ê Ê Ê Ê Ê Ê Ê Ê Ê
 Ê Ê Ê	var in, out, c1, c2, c3, c4, c5;
@@ -31,11 +31,11 @@ BEgoro : Beffect
 
 	}).add;
 	}
-	
+
 	play {
 		wrap.play;
 	}
-	
+
 		setDescription {
 		description = "BEgoro: Multi combi filter.";
 	}

@@ -64,22 +64,22 @@ BLSynth5 : BGen
 		}, [0.1, 0.1, 0.1, 0.1, 0.1, 0.1, 0.1, 0.1, 0.1, 0.1, 0.1, 0.1, 0.1, 0.1, 0.1, 0.1]
 		).add;
 
-		SynthDef(\bLSynth5Verb,{| �d1 = 0.1, d2 = 0.15, d3 = 0.2, d4 = 0.25, d5 = 0.4,
-� � �	t1 = 1, t2 = 2, t3 = 3, t4 = 4, t5 = 5, f1 = 450, f2 = 850, f3 = 1250, f4 = 2450,
+	SynthDef(\bLSynth5Verb,{| d1 = 0.1, d2 = 0.15, d3 = 0.2, d4 = 0.25, d5 = 0.4,
+		t1 = 1, t2 = 2, t3 = 3, t4 = 4, t5 = 5, f1 = 450, f2 = 850, f3 = 1250, f4 = 2450,
 		f5 = 20000, in = 3, out = 0, amp=0.8, delayMult=1.0, decayMult=1.0, filtMult=1.0, mix=0.5, pan=0.0
 		frequencies=#[800, 1071, 1353, 1723]|
-� � � � � � � � � � � � � � � � � � � �
-� � �	var inB, outB, c0, c1, c2, c3, c4, c5, reso;
-	 	inB = Pan2.ar(In.ar(in, 1), pan);
-	 	reso = DynKlank.ar(`[frequencies, [0.25, 0.25, 0.25, 0.25], [0.15, 0.08, 0.07, 0.06]], inB);
-	  	c0 = ((inB * 0.4) + (reso * 0.5));
-	  	c1 = LPF.ar(CombC.ar(c0, 1, d1 * delayMult, t1 * decayMult), f1 * filtMult) * 1.2;
-� � � �	c2 = LPF.ar(CombC.ar(c0, 1, d2 * delayMult, t2 * decayMult), f2 * filtMult) * 1.2;
-� � � �	c3 = LPF.ar(CombC.ar(c0, 1, d3 * delayMult, t3 * decayMult), f3 * filtMult) * 1.2;
-� � � �	c4 = LPF.ar(CombC.ar(c0, 1, d4 * delayMult, t4 * decayMult), f4 * filtMult) * 1.2;
-� � � �	c5 = LPF.ar(CombC.ar(c0, 1, d5 * delayMult, t5 * decayMult), f5 * filtMult) * 1.2;
-� � � �
-� � � �	outB = (((c1 + c2 + c3 + c4 + c5) * 0.2) * mix) + (inB * (1 - mix));
+
+		var inB, outB, c0, c1, c2, c3, c4, c5, reso;
+		inB = Pan2.ar(In.ar(in, 1), pan);
+		reso = DynKlank.ar(`[frequencies, [0.25, 0.25, 0.25, 0.25], [0.15, 0.08, 0.07, 0.06]], inB);
+		c0 = ((inB * 0.4) + (reso * 0.5));
+		c1 = LPF.ar(CombC.ar(c0, 1, d1 * delayMult, t1 * decayMult), f1 * filtMult) * 1.2;
+		c2 = LPF.ar(CombC.ar(c0, 1, d2 * delayMult, t2 * decayMult), f2 * filtMult) * 1.2;
+		c3 = LPF.ar(CombC.ar(c0, 1, d3 * delayMult, t3 * decayMult), f3 * filtMult) * 1.2;
+		c4 = LPF.ar(CombC.ar(c0, 1, d4 * delayMult, t4 * decayMult), f4 * filtMult) * 1.2;
+		c5 = LPF.ar(CombC.ar(c0, 1, d5 * delayMult, t5 * decayMult), f5 * filtMult) * 1.2;
+
+		outB = (((c1 + c2 + c3 + c4 + c5) * 0.2) * mix) + (inB * (1 - mix));
 		Out.ar(out, outB);
 
 	}).add;

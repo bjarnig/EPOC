@@ -1,16 +1,16 @@
 
 DCian : BGSoundObject
-{ 
-	var <>speed, <>brownStep, <>durFrom, <>durTo, <>sampleStart, 
+{
+	var <>speed, <>brownStep, <>durFrom, <>durTo, <>sampleStart,
 	<>sampleEnd, <>grainAttack, <>grainRelease, <>cloudAttack, <>cloudRelease, <>rate, <>buffer;
-	
-	*new { |outBus=0, amp=0.7, speed=0.1, brownStep=0.001, durFrom=0.1, durTo=1.5, 	sampleStart=0.0, sampleEnd=0.4, grainAttack=0.05, grainRelease=0.2,cloudAttack=8, 	cloudRelease=12, rate=1, buffer| 
-		^super.newCopyArgs(nil, outBus, 0, amp, speed, brownStep, durFrom, durTo, sampleStart, 
-		sampleEnd, grainAttack, grainRelease,cloudAttack, cloudRelease, rate, buffer); 
+
+	*new { |outBus=0, amp=0.7, speed=0.1, brownStep=0.001, durFrom=0.1, durTo=1.5, 	sampleStart=0.0, sampleEnd=0.4, grainAttack=0.05, grainRelease=0.2,cloudAttack=8, 	cloudRelease=12, rate=1, buffer|
+		^super.newCopyArgs(nil, outBus, 0, amp, speed, brownStep, durFrom, durTo, sampleStart,
+		sampleEnd, grainAttack, grainRelease,cloudAttack, cloudRelease, rate, buffer);
 	}
-	
+
 	*loadSynthDefs {
-		SynthDef(\cianGrain, 
+		SynthDef(\cianGrain,
 		{|bus = 0, amp=0.1, pan=0, grdur=0.1, atk=0.01, rel=0.1, rate=1, offset=0, buf|
 		var env = EnvGen.ar(Env.linen(atk, grdur-atk-rel, rel, amp), doneAction:2);
 		var signal = PlayBuf.ar(1,buf, rate*BufRateScale.ir(buf), 1, offset*BufFrames.ir(buf), 1);
@@ -19,10 +19,10 @@ DCian : BGSoundObject
 		OffsetOut.ar(bus, Pan2.ar(signal, pan + rrand(-0.3, 0.3)));
 		}).add;
 	}
-		
+
 	play {
 		var pat1, pat2, pat3, pat4;
-	
+
 		pat1 = Pbind(
 		\instrument, 'cianGrain',
 		\dur, Env.new([speed/2, speed, speed * 2], [cloudAttack*1.2, cloudRelease], 'linear'),
@@ -74,7 +74,7 @@ DCian : BGSoundObject
 		\amp, Env.linen(cloudAttack + 8, 0, cloudRelease + (cloudRelease/8), 0.1*amp, 2),
 		\rate, rate/2
 		);
-	
+
 		Ppar([pat1, pat2, pat3, pat4]).play;
 	}
 }

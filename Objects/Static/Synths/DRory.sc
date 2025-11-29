@@ -1,21 +1,21 @@
 
 DRory : BGSoundObject
-{ 
+{
 	var <>buf, <>stretch, <>stretchDev, <>durDev, <>dur, <>rateDev, <>rate, <>attack, <>sustain, 	<>release, <>lopassFrom, <>lopassTo, <>hipassFrom, <>hipassTo, <>amp1, <>amp2, <>amp3, <>amp4, 	playFunction;
-	
-	*new 
-	{ |buf=0, outBus=0, stretch = 15, stretchDev = 0.2, durDev = 0.2, dur = 0.2, rateDev = 0.02, 
+
+	*new
+	{ |buf=0, outBus=0, stretch = 15, stretchDev = 0.2, durDev = 0.2, dur = 0.2, rateDev = 0.02,
 	rate = 1, attack=4, sustain=3, release=10, lopassFrom = 50, lopassTo=800, hipassFrom=800, 	hipassTo=20000, amp1 = 2, amp2 = 1, amp3 = 1, amp4 = 1|		^super.newCopyArgs(nil,outBus,0,1,buf,stretch,stretchDev,durDev,dur,rateDev,
-		rate,attack,sustain,release,lopassFrom,lopassTo, hipassFrom, hipassTo, amp1, amp2, 
+		rate,attack,sustain,release,lopassFrom,lopassTo, hipassFrom, hipassTo, amp1, amp2,
 		amp3, amp4;);
 	}
-	
+
 	init {
-	
+
 	playFunction = {arg outBus = 0, stretch = 1, dur = 0.06, rate = 1, amp = 0.5, 		attack=0.5, sustain=2, release=2, lopassFrom=20000, lopassTo=20000, hipassFrom=20, 		hipassTo=20;
-	
+
 		Routine({
-		var next, st, pos, gdur, ovlp, grainCount, totaldur, durEnv, ampEnv, ampVal, lopass, 		hipass;  
+		var next, st, pos, gdur, ovlp, grainCount, totaldur, durEnv, ampEnv, ampVal, lopass, 		hipass;
 		ovlp = 2;
 		totaldur = buf.numFrames / buf.sampleRate;
 		grainCount = ((totaldur / dur) * ovlp * stretch).asInteger;
@@ -29,20 +29,20 @@ DRory : BGSoundObject
 			st 	= i * next / totaldur / stretch;
 			hipass = rrand(hipassFrom, hipassTo);
 			lopass = rrand(lopassFrom, lopassTo);
-			Server.internal.makeBundle(0.1, { Synth("bufgrain", [\buf, buf.bufnum, 
-			\dur, gdur, \rate, rate, \start, st, \pan, pos, \amp, ampVal, \hip, hipass, 
+			Server.internal.makeBundle(0.1, { Synth("bufgrain", [\buf, buf.bufnum,
+			\dur, gdur, \rate, rate, \start, st, \pan, pos, \amp, ampVal, \hip, hipass,
 			\lop, lopass, \buf, buf, \outBus, outBus]) });
-		next.wait;	
+		next.wait;
 	});
 	})};
 	}
-		
-	*loadSynthDefs { 
-	
-		SynthDef("bufgrain", { arg buf=0, rate=1, start=0, outBus=0, amp=0.2, dur=0.3, pan=0, 
+
+	*loadSynthDefs {
+
+		SynthDef("bufgrain", { arg buf=0, rate=1, start=0, outBus=0, amp=0.2, dur=0.3, pan=0,
 		hip=30, lop=20000;
 		var env, sig;
-		env = EnvGen.ar(Env([0, amp, 0], [dur*0.5, dur*0.5], \sine), doneAction: 2); 
+		env = EnvGen.ar(Env([0, amp, 0], [dur*0.5, dur*0.5], \sine), doneAction: 2);
 		sig = PlayBuf.ar(1, buf, rate * BufRateScale.ir(buf), 1, start * BufSamples.ir(buf), 0);
 		sig = BHiPass.ar(sig, hip) +  BLowPass.ar(sig, lop);
 		sig = HPF.ar(sig, 80);
@@ -50,8 +50,8 @@ DRory : BGSoundObject
 		OffsetOut.ar(outBus, sig);
 		}).add;
 	}
-	
-	play 
+
+	play
 	{
 		playFunction.value(outBus:outBus, stretch:stretch, dur:dur, rate:rate, 		amp:amp1, lopassFrom:lopassFrom, lopassTo:lopassTo, 		hipassFrom:hipassFrom,hipassTo:hipassTo,attack:attack, sustain:sustain, 		release:release).play;
 
@@ -63,4 +63,3 @@ DRory : BGSoundObject
 	}
 }
 
-	

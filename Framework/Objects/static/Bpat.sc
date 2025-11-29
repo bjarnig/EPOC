@@ -1,26 +1,26 @@
 
 Bpat : Bobject
-{ 	
+{
 	var <>duration = inf;
-	
+
 	*loadSynthDefs {
-		
-	 	var children;
+
+		var children;
 		children = Bpat.subclasses;
-		children.do{|item| ('Bpat.loadSynthDefs: ' ++ item).postln; 
+		children.do{|item| ('Bpat.loadSynthDefs: ' ++ item).postln;
 		item.loadSynthDefs};
 	}
-	
-	play 
+
+	play
 	{
 	}
-	
-	playDuration 
+
+	playDuration
 	{|pat|
-		
-		Routine 
+
+		Routine
 		{
-			1.do({arg b;	
+			1.do({arg b;
 			var rp = pat.play;
 			duration.wait;
 			rp.stop;

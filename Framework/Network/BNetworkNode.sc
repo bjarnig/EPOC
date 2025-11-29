@@ -135,8 +135,8 @@ BNetworkNode
 	transferValues = ();
 
 	this.items.do({arg item; transferValues.put(transferCount, [item.start, item.duration, item.control.amplitude, item.control.attack, item.control.release]);
- 	transferCount = transferCount + 1});
- 	transferCount = 0;
+	transferCount = transferCount + 1});
+	transferCount = 0;
 
 	this.items = this.items.sort({ arg a, b; a.control.weightTimbral > b.control.weightTimbral });
 	this.items.do({arg item; transferObj = transferValues.at(transferCount);
@@ -155,8 +155,8 @@ BNetworkNode
 	transferValues = ();
 
 	this.items.do({arg item; transferValues.put(transferCount, [item.start, item.duration, item.control.amplitude, item.control.attack, item.control.release]);
- 	transferCount = transferCount + 1});
- 	transferCount = 0;
+	transferCount = transferCount + 1});
+	transferCount = 0;
 
 	this.items = this.items.sort({ arg a, b; a.control.weightTemporal > b.control.weightTemporal });
 	this.items.do({arg item; transferObj = transferValues.at(transferCount);
@@ -175,8 +175,8 @@ BNetworkNode
 	transferValues = ();
 
 	this.items.do({arg item; transferValues.put(transferCount, [item.start, item.duration, item.control.amplitude, item.control.attack, item.control.release]);
- 	transferCount = transferCount + 1});
- 	transferCount = 0;
+	transferCount = transferCount + 1});
+	transferCount = 0;
 
 	this.items = this.items.sort({ arg a, b; a.control.weightSum > b.control.weightSum });
 	this.items.do({arg item; transferObj = transferValues.at(transferCount);
@@ -195,8 +195,8 @@ BNetworkNode
 	transferValues = ();
 
 	this.items.do({arg item; transferValues.put(transferCount, [item.start, item.duration, item.control.amplitude, item.control.attack, item.control.release]);
- 	transferCount = transferCount + 1});
- 	transferCount = 0;
+	transferCount = transferCount + 1});
+	transferCount = 0;
 
 	this.items = this.items.sort({ arg a, b; a.control.weightDiff > b.control.weightDiff });
 	this.items.do({arg item; transferObj = transferValues.at(transferCount);

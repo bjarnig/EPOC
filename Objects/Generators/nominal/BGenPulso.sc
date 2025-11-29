@@ -1,18 +1,18 @@
 
 BGenPulso : BGen
-{ 	
-	var paramValues, reverb, reverbBus;	
-	
+{
+	var paramValues, reverb, reverbBus;
+
 	*new { |id=0, description, duration, control, outBus=0, values|
 		^super.newCopyArgs(id, description, duration, control, outBus, nil, nil, nil).init(values);
 	}
-	
+
 	init {|values|
 		paramValues = values;
 		reverbBus = Bus.audio(Server.local, 2);
 		this.setDescription;
 	}
-	
+
 	*loadSynthDefs {
 
 	 	SynthDef(\pulso,
@@ -28,11 +28,11 @@ BGenPulso : BGen
 		signal = signal * amp * env;
 		Out.ar(out, signal);
 	 	}, [0.1, 0.1, 0.1, 0.1, 0.1, 0.1]
-		).add; 
-		
-		SynthDef(\pulsoCombi, 
+		).add;
+
+		SynthDef(\pulsoCombi,
 		{| Êd1 = 0.08, d2 = 0.09, d3 = 0.1, d4 = 0.15, d5 = 0.2,
-Ê Ê Ê	t1 = 1, t2 = 2, t3 = 3, t4 = 4, t5 = 5, f1 = 50, f2 = 150, f3 = 250, f4 = 350, 
+Ê Ê Ê	t1 = 1, t2 = 2, t3 = 3, t4 = 4, t5 = 5, f1 = 50, f2 = 150, f3 = 250, f4 = 350,
 		f5 = 20000, in = 3, out = 0, amp=0.8, delayMult=0.1, decayMult=8.0, filtMult=1.0, mix=0.5|
 Ê Ê Ê Ê Ê Ê Ê Ê Ê Ê Ê Ê Ê Ê Ê Ê Ê Ê Ê Ê
 Ê Ê Ê	var inB, outB, c1, c2, c3, c4, c5;
@@ -49,19 +49,19 @@ BGenPulso : BGen
 
 	}).add;
 	}
-	
+
 	play {
 	wrap = Bwrap.new(\pulso, paramValues);
 	reverbBus = Bus.audio(Server.local, 2);
 	wrap.set(\out, reverbBus);
 	reverb = Bwrap.new(\pulsoCombi, [\in, reverbBus, \out, outBus]);
 	this.update.value;
-	reverb.play;	
+	reverb.play;
 	this.playDuration(duration);
 	}
-	
+
 	playDuration {| length |
-	
+
 		if(length.notNil){
 			Routine {
 			1.do {
@@ -69,20 +69,20 @@ BGenPulso : BGen
 			length.wait;
 			this.stop.value;
 			}}.play;
-		}{ 
+		}{
 			wrap.play;
 		}
 	}
-	
+
 	stop {
-		
+
 		wrap.stop;
 		reverb.stop;
 		reverbBus.free;
 	}
-	
+
 	update {
-	
+
 	wrap.set(\density, control.density.linlin(0.0, 1.0, 0.001, 400));
 	wrap.set(\speed, control.speed.linlin(0.0, 1.0, 0.001, 400));
 	wrap.set(\freq, control.frequency.linlin(0.0, 1.0, 0.001, 2));
@@ -95,9 +95,9 @@ BGenPulso : BGen
 	reverb.set(\delayMult, (control.location));
 	reverb.set(\mix, (control.color * 0.8));
 	reverb.set(\decayMult, ((1 - control.color) * 0.5) + 0.05);
-	
+
 	}
-	
+
 	setDescription {
 		description = "BGenRezim: 3 part resonant impulse oscillators. ";
 	}

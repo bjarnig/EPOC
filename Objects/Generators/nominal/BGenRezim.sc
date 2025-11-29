@@ -1,18 +1,18 @@
 
 BGenRezim : BGen
-{ 	
-	var paramValues, reverb, reverbBus;	
-	
+{
+	var paramValues, reverb, reverbBus;
+
 	*new { |id=0, description, duration, control, outBus=0, values|
 		^super.newCopyArgs(id, description, duration, control, outBus, nil, nil, nil).init(values);
 	}
-	
+
 	init {|values|
 		paramValues = values;
 		reverbBus = Bus.audio(Server.local, 2);
 		this.setDescription;
 	}
-	
+
 	*loadSynthDefs {
 
 	 	SynthDef(\rezim,
@@ -37,11 +37,11 @@ BGenRezim : BGen
 		signal = Pan2.ar(signal, 0, 1);
 		Out.ar(out, signal);
 		}, [0.1, 0.1, 0.1, 0.1, 0.1, 0.1, 0.1, 0.1, 0.1, 0.1, 0.1, 0.1, 0.1, 0.1, 0.1, 0.1, 0.1]
-		).add; 
-		
-		SynthDef(\rezimCombi, 
+		).add;
+
+		SynthDef(\rezimCombi,
 		{| Êd1 = 0.08, d2 = 0.09, d3 = 0.1, d4 = 0.15, d5 = 0.2,
-Ê Ê Ê	t1 = 1, t2 = 2, t3 = 3, t4 = 4, t5 = 5, f1 = 50, f2 = 150, f3 = 250, f4 = 350, 
+Ê Ê Ê	t1 = 1, t2 = 2, t3 = 3, t4 = 4, t5 = 5, f1 = 50, f2 = 150, f3 = 250, f4 = 350,
 		f5 = 20000, in = 3, out = 0, amp=0.8, delayMult=0.1, decayMult=2.0, filtMult=1.0, mix=0.5|
 Ê Ê Ê Ê Ê Ê Ê Ê Ê Ê Ê Ê Ê Ê Ê Ê Ê Ê Ê Ê
 Ê Ê Ê	var inB, outB, c1, c2, c3, c4, c5;
@@ -58,19 +58,19 @@ BGenRezim : BGen
 
 	}).add;
 	}
-	
+
 	play {
 	wrap = Bwrap.new(\rezim, paramValues);
 	reverbBus = Bus.audio(Server.local, 2);
 	wrap.set(\out, reverbBus);
 	reverb = Bwrap.new(\rezimCombi, [\in, reverbBus, \out, outBus]);
 	this.update.value;
-	reverb.play;	
+	reverb.play;
 	this.playDuration(duration);
 	}
-	
+
 	playDuration {| length |
-	
+
 		if(length.notNil){
 			Routine {
 			1.do {
@@ -78,45 +78,45 @@ BGenRezim : BGen
 			length.wait;
 			this.stop.value;
 			}}.play;
-		}{ 
+		}{
 			wrap.play;
 		}
 	}
-	
+
 	stop {
-		
+
 		wrap.stop;
 		reverb.stop;
 		reverbBus.free;
 	}
-	
+
 	update {
-	
+
 	var newFrequency1, newFrequency2, newFrequency3, newFrequency4;
 	var newAttack, newRelease, newSustain, newAmp, newColor, newSpeed;
-	
+
 	// Calculate params
-	
+
 	newAmp = control.amplitude.linlin(0.0, 1.0, 0.0, 2.0);
 	newAttack = control.attack * duration;
 	newRelease = control.release * duration;
-	newSustain = duration - (newAttack + newRelease);	
+	newSustain = duration - (newAttack + newRelease);
 	newColor = control.color.linlin(0.0, 1.0, 0.001, 3.0);
 	newFrequency1 = 100 * control.frequency;
-	newFrequency2 = 150 * control.frequency; 
-	newFrequency3 = 200 * control.frequency; 
-	newFrequency4 = 300 * control.frequency; 
+	newFrequency2 = 150 * control.frequency;
+	newFrequency3 = 200 * control.frequency;
+	newFrequency4 = 300 * control.frequency;
 	newSpeed = control.speed.linlin(0.0, 1.0, 0.001, 15.0);
-	
+
 	// Set params
-	
+
 	wrap.set(\freq1, newFrequency1);
 	wrap.set(\freq2, newFrequency2);
 	wrap.set(\freq3, newFrequency3);
 	wrap.set(\atk, newAttack);
 	wrap.set(\rel, newRelease);
 	wrap.set(\sus, newSustain);
-		
+
 	wrap.set(\amp, newAmp);
 	wrap.set(\speed, newSpeed);
 	wrap.set(\color, newColor);
@@ -126,9 +126,9 @@ BGenRezim : BGen
 	reverb.set(\mix, (control.location * 0.8));
 	reverb.set(\decayMult, ((1 - control.location) * 0.5) + 0.05);
 	wrap.set(\filter, 80 + (16000 * control.frequency));
-	
+
 	}
-	
+
 	setDescription {
 		description = "BGenRezim: 3 part resonant impulse oscillators. ";
 	}

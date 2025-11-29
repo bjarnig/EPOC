@@ -66,10 +66,10 @@ BLGest8 : BGen
 		level = 1.0 - fxlevel;
 		sig = InFeedback.ar(inBus,2);
 		fx = sig + LocalIn.ar(2);
-		fx = (DelayC.ar(fx, maxDelay, delay) + LPF.ar(DelayC.ar(fx, maxDelay * 1.2, delay * 1.2), 200)) * 0.75;
-		LocalOut.ar(fx * feedback);
-� �		Out.ar(outBus, (fx * fxlevel) + (sig * level))
-		}).add;	}
+	fx = (DelayC.ar(fx, maxDelay, delay) + LPF.ar(DelayC.ar(fx, maxDelay * 1.2, delay * 1.2), 200)) * 0.75;
+	LocalOut.ar(fx * feedback);
+		Out.ar(outBus, (fx * fxlevel) + (sig * level))
+	}).add;	}
 
 	play {
 
