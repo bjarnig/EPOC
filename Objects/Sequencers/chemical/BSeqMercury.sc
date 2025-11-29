@@ -19,7 +19,7 @@ BSeqMercury : BSeq
 		if(load > 0, {
 		if(durations.isNil, {this.durations = [0.5, 0.5]});
 		if(this.amplitudes.isNil, {this.amplitudes = [1, 1]});
- 		if(this.pitches.isNil, {this.pitches = [1, 1]});
+		if(this.pitches.isNil, {this.pitches = [1, 1]});
 		effectBus = Bus.audio(Server.local, 2);
 		reverb = Bwrap.new(\mercuryReso, [\inBus, effectBus, \outBus, outBus]);
 		reverb.play; });

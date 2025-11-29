@@ -64,7 +64,7 @@ BLText2 : BGen
 		sig = sig * env;
 		sig = sig * amp;
 		outLeft = sig[0] * ampLeft;
- 		outRight = sig[1] * ampRight;
+		outRight = sig[1] * ampRight;
 		Out.ar(outBus, [outLeft, outRight]);
 		}).add;
 

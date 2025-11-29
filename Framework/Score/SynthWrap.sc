@@ -359,7 +359,7 @@ SynthWrap {
 
 			synth.set(key,obj.value);
 			//("ActController(accessNumEdit), Setting synth's "++key++" to "++obj.value).postln;
- 		})
+		})
 
 		}.asArray;
 

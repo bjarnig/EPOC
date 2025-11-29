@@ -16,11 +16,11 @@ BLPat6 : BGen
 		if(load > 0, {
 
 		this.initEffect.value;
- 		updatedFrequencies = Array.new(4);
- 		updatedFrequencies.add(67);
- 		updatedFrequencies.add(87);
- 		updatedFrequencies.add(97);
- 		updatedFrequencies.add(107);
+		updatedFrequencies = Array.new(4);
+		updatedFrequencies.add(67);
+		updatedFrequencies.add(87);
+		updatedFrequencies.add(97);
+		updatedFrequencies.add(107);
 		if(frequencies.isNil, {frequencies = [12000, 11000, 10000, 90000]});
 		});
 	}

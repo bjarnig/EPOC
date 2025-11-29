@@ -51,8 +51,8 @@ BLGest7 : BGen
 		sig = sig + (PlayBuf.ar(2, bufnum, BufRateScale.kr(bufnum) * 1.1, loop: 1.0) * density);
 		sig = BPeakEQ.ar(sig, bpFreq, 3, -18);
 		sig = (sig * env) * amp;
- 		outLeft = sig[0] * ampLeft;
- 		outRight = sig[1] * ampRight;
+		outLeft = sig[0] * ampLeft;
+		outRight = sig[1] * ampRight;
 		Out.ar(outBus, [outLeft, outRight]);
 		}).add;
 

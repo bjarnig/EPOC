@@ -37,7 +37,7 @@ BGenNitrate : BGen
 	initEffect {
 		effectBus = Bus.audio(Server.local, 2);
 		reverb = Bwrap.new(\nitrateVerb, [\in, effectBus, \out, outBus]);
- 		reverb.play;
+		reverb.play;
 	}
 
 	readFiles {arg path;
@@ -47,7 +47,7 @@ BGenNitrate : BGen
 		buffers = files.collect { |sf| var b;
 		b = Buffer.read(Server.local, sf.path);};
 		buffers;
- 		^buffers;
+		^buffers;
 	}
 
 	*loadSynthDefs {
@@ -73,7 +73,7 @@ BGenNitrate : BGen
 		formlet = (signal * surface) + ((1 - surface) * Formlet.ar(signal, 80 + (100 * rate), 0.01, 0.1));
 		signal = (signal * 0.5) + (formlet * 0.5);
 		signal = BPeakEQ.ar(signal, hiEqFreq, 12, hiEqAmt) + BPeakEQ.ar(signal, loEqFreq, 12, loEqAmt);
- 		signal = signal * EnvGen.ar(Env.new([0, 1, 1, 0],[atk, sus, rel], [-4, 1, -1]));
+		signal = signal * EnvGen.ar(Env.new([0, 1, 1, 0],[atk, sus, rel], [-4, 1, -1]));
 		Out.ar(outBus, signal);
 		}).add;
 

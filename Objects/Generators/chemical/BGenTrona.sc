@@ -137,7 +137,7 @@ BGenTrona : BGen
 	('TRONA Update amp is ' ++ control.amplitude).postln;
 
 	if(updateAll == 1 || (control.density != preControl.density), { wrap.set(\density, control.density.linlin(0.0, 1.0, 0.001, 800))});
-  	if(updateAll == 1 || (control.speed != preControl.speed), { wrap.set(\speed, control.speed.linlin(0.0, 1.0, 0.00001, 800))});
+	if(updateAll == 1 || (control.speed != preControl.speed), { wrap.set(\speed, control.speed.linlin(0.0, 1.0, 0.00001, 800))});
 	if(updateAll == 1 || (control.frequency != preControl.frequency), { wrap.set(\freq, Env.new([0.0001, 0.2, 0.4, 1.5, 2.5],[0.25, 0.25, 0.25, 0.25]).at(control.frequency));
 	wrap.set(\dynMult, Env.new([0.1, 0.5, 1.0, 1.5, 2.5],[0.25, 0.25, 0.25, 0.25]).at(control.frequency))});
 	if(updateAll == 1 || (control.surface != preControl.surface), { wrap.set(\surface, control.surface)});

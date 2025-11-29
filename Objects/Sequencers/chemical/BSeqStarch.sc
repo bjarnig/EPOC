@@ -50,7 +50,7 @@ BSeqStarch : BSeq
 		buffers = files.collect { |sf| var b;
 		b = Buffer.read(Server.local, sf.path);};
 		buffers;
- 		^buffers;
+		^buffers;
 	}
 
 	*loadSynthDefs {

@@ -17,11 +17,11 @@ BLSynth5 : BGen
 		if(load > 0, {
 
 		this.initEffect.value;
- 		updatedFrequencies = Array.new(4);
- 		updatedFrequencies.add(67);
- 		updatedFrequencies.add(87);
- 		updatedFrequencies.add(97);
- 		updatedFrequencies.add(107);
+		updatedFrequencies = Array.new(4);
+		updatedFrequencies.add(67);
+		updatedFrequencies.add(87);
+		updatedFrequencies.add(97);
+		updatedFrequencies.add(107);
 		if(frequencies.isNil, {frequencies = [67, 89, 113, 139]});
 		if(durations.isNil, {durations = [0.5, 1, 0.5, 2, 4, 0.5, 1]});
 		if(amplitudes.isNil, {amplitudes = [1.0, 0.1, 0.8, 0.2, 0.4, 1.0, 0.1, 1.0]});

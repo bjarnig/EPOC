@@ -77,7 +77,7 @@ BGenBeryl : BGen
 		signal = In.ar(inBus, 2);
 		verb = signal;
 		8.do{verb=AllpassL.ar(verb,0.3,{0.2.rand+0.1}!2,5)};
- 		verb = verb.tanh;
+		verb = verb.tanh;
 		effect = BLowPass4.ar(verb * 0.5, 1400, 0.2) + BHiPass4.ar(verb * 0.5, 8000, 0.2);
 		output = (effect * dryWet) + (signal * (1-dryWet));
 		Out.ar(outBus, output);

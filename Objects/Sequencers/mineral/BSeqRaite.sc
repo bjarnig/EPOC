@@ -82,7 +82,7 @@ BSeqRaite : BSeq
 		buffers = files.collect { |sf| var b;
 		b = Buffer.read(Server.local, sf.path);};
 		buffers;
- 		^buffers;
+		^buffers;
 	}
 
 	*loadSynthDefs {
@@ -137,7 +137,7 @@ BSeqRaite : BSeq
 		rel = control.release * duration;
 		sus = duration - (atk + rel);
 
- 		rate = Pseq(BUtils.limitArrayByPosition(control.position, freqSeq) * Env.new([0.1, 0.5, 1, 2, 8],[0.25, 0.25, 0.25, 0.25]).at(control.frequency), inf);
+		rate = Pseq(BUtils.limitArrayByPosition(control.position, freqSeq) * Env.new([0.1, 0.5, 1, 2, 8],[0.25, 0.25, 0.25, 0.25]).at(control.frequency), inf);
 		durs = Pseq(BUtils.limitArrayByPosition(control.position, durSeq) * Env.new([8, 2, 1, 0.25, 0.05],[0.25, 0.25, 0.25, 0.25]).at(control.density), inf) * Pwhite(1 - control.entropy, 1);
 		sndSel = Pseq(BUtils.limitArrayByPosition(control.position, soundSeq) + buffers[0].bufnum, inf);
 		delta = Pseq(BUtils.limitArrayByPosition(control.position, deltaSeq) * Env.new([8, 2, 1, 0.25, 0.05],[0.25, 0.25, 0.25, 0.25]).at(control.speed), inf) * Pwhite(1 - control.entropy, 1);
