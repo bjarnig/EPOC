@@ -1,0 +1,80 @@
+
+BGenNitrate : BGen
+{
+	var paramValues, <>sounds, buffers, reverb, effectBus, <>isPlaying, <>preControl;
+
+	*new { |id=0, description, duration=10, control, outBus=0, values, sounds, path, load=1|
+		^super.newCopyArgs(id, description, duration, control, outBus, nil, values, sounds).init(load);
+	}
+
+	init {|load=1|
+
+		preControl = BControl.new;
+		this.setDescription;
+		this.isPlaying = 0;
+		if(this.control.isNil, {this.control = BControl.new});
+
+		if(load > 0, {
+			Routine{
+			buffers = this.readFiles(this.sounds).value;
+			this.initEffect.value;
+			Server.local.sync;
+			}.play;
+		});
+	}
+
+	setParam {|paramName, paramValue|
+		if(paramName == \duration, {duration = paramValue});
+		if(paramName == \sounds, {sounds = paramValue});
+		if(paramName == \outBus, {outBus = paramValue});
+	}
+
+	setParamAndUpdate {|param, value|
+	if(this.isPlaying > 0,
+	{control.setParamValue(param, value);
+	this.update.value;})}
+
+	initEffect {
+		effectBus = Bus.audio(Server.local, 2);
+		reverb = Bwrap.new(\nitrateVerb, [\in, effectBus, \out, outBus]);
+ 		reverb.play;
+	}
+
+	readFiles {arg path;
+		var files, buffers;
+		if(path.isNil, {path = BConstants.monoImpulses});
+		files = SoundFile.collect(path);
+		buffers = files.collect { |sf| var b;
+		b = Buffer.read(Server.local, sf.path);};
+		buffers;
+ 		^buffers;
+	}
+
+	*loadSynthDefs {
+
+		SynthDef(\nitrate, {
+		arg maxBuf=2.1, outBus=0, amp=0.1, atk=0.1, sus=0.5, rel=0.1, firstBuf=0, speed=0.5, freq=0.5, density=0.5, entropy=0.5, surface=0.5,
+		freqRandFrom=1.0, freqRandTo=1.0, sineFreq=0.5, grDur=1.0, pos=0, pan=0, hiEqAmt=1, hiEqFreq=8000, loEqAmt=1, loEqFreq=200;
+		var trate, clk, index, index2, indexOsc, indexOsc2, mod, signal, rate, ampEnv, bufPos, formlet;
+		trate = speed * 12;
+		mod = LFNoise1.ar(100 * entropy, mul:0.5, add:0.5).min(1.0).max(1 - entropy);
+		mod = mod + SinOsc.ar(0.01, add:1, mul:1);
+		indexOsc = SinOsc.ar(speed* mod, mul:0.5, add:0.5) * SinOsc.ar((speed* mod) * 0.25, mul:0.5, add:0.5);
+		indexOsc2 = SinOsc.ar((speed*0.5) * mod, mul:0.5, add:0.5) * SinOsc.ar(((speed*0.5) * mod) * 0.25, mul:0.5, add:0.5);
+		clk = Impulse.kr(trate);
+		index = firstBuf + (indexOsc * maxBuf);
+		index2 = firstBuf + (indexOsc2 * maxBuf);
+		rate = (2 * freq) * TRand.kr(freqRandFrom, freqRandTo, clk);
+		bufPos = pos * BufDur.kr(index);
+		signal = TGrains.ar(2, clk, index, rate.max(0.01), bufPos, grDur, pan, amp);
+		signal = signal + TGrains.ar(2, clk, index, rate.max(0.01), bufPos, grDur*0.75, pan, amp * density);
+		signal = (signal * 0.75) + (signal * ((SinOsc.ar(speed*0.5, 0.5, 0.5) * 0.25)));
+		signal = (signal * (1 - (density * 0.5)) * 1.25);
+		formlet = (signal * surface) + ((1 - surface) * Formlet.ar(signal, 80 + (100 * rate), 0.01, 0.1));
+		signal = (signal * 0.5) + (formlet * 0.5);
+		signal = BPeakEQ.ar(signal, hiEqFreq, 12, hiEqAmt) + BPeakEQ.ar(signal, loEqFreq, 12, loEqAmt);
+ 		signal = signal * EnvGen.ar(Env.new([0, 1, 1, 0],[atk, sus, rel], [-4, 1, -1]));
+		Out.ar(outBus, signal);
+		}).add;
+
+		SynthDef(\nitrateVerb,{| 

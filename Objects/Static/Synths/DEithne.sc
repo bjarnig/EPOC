@@ -1,11 +1,11 @@
 
 DEithne : BGSoundObject
-{ 
+{
 	var buf, atk, sus, rel, rate, grAtk, grRel,
 	sinFreq, sinAmp, noiseFreq, noiseAmp, impulseFreq, startPos,
 	impulseAmp, sawFreq, sawAmp, sampFreq, sampAmp, hipass;
-	
-	*new 
+
+	*new
 	{ |outBus=0, amp=0.8, buf=1, atk=2, sus=8, rel=12, rate=100, grAtk=0.2,grRel=0.1,
 	sinFreq=66, sinAmp=0.8, noiseFreq=12000, noiseAmp=1.2, impulseFreq=6000, startPos=0.1,
 	impulseAmp=0.3, sawFreq=80, sawAmp=2, sampFreq=2300, sampAmp=0.7, hipass=40|
@@ -13,7 +13,7 @@ DEithne : BGSoundObject
 	sinFreq, sinAmp, noiseFreq, noiseAmp, impulseFreq, startPos,
 	impulseAmp, sawFreq, sawAmp, sampFreq, sampAmp, hipass);
 	}
-		
+
 	*loadSynthDefs {
 	SynthDef(\eithne, {arg outBus=0, amp=0.8, buf=1, atk=15, sus=8, rel=12, rate=60, grAtk=0.6, grRel=0.1,
 	sinFreq=66, sinAmp=0.8, noiseFreq=3000, noiseAmp=1.2, impulseFreq=6000, startPos=0.1,
@@ -28,7 +28,7 @@ DEithne : BGSoundObject
 	var sine = LPF.ar(SinOsc.ar(sinFreq,mul:env), sinFreq + (sinFreq/3),0.3) * sinAmp;
 	var noise = BPF.ar(PinkNoise.ar(mul:env), noiseFreq, 0.1) * noiseAmp;
 	var sample = BPF.ar(PlayBuf.ar(1, buf, BufRateScale.kr(buf), loop: 0, trigger:trigger, startPos:startPos),sampFreq, 0.4) * sampAmp;
-	var bass = (sine + saw); 
+	var bass = (sine + saw);
 	var treble = (impulse + noise + sample);
 	bass = bass * bassEnv;
 	treble = treble * trebleEnv;
@@ -38,13 +38,12 @@ DEithne : BGSoundObject
 	Out.ar(outBus, Pan2.ar(signal, 0));
 	}).add;
 	}
-	
-	play 
+
+	play
 	{
-		synth = Synth(\eithne, [\outBus, outBus, \amp, amp, \buf, buf, \atk, atk, \sus, sus, \rel, rel, \rate, rate, \grAtk, grAtk, 
-		\grRel, grRel, \sinFreq, sinFreq, \sinAmp, sinAmp, \noiseFreq, noiseFreq, \noiseAmp, noiseAmp, \impulseFreq, impulseFreq, 
+		synth = Synth(\eithne, [\outBus, outBus, \amp, amp, \buf, buf, \atk, atk, \sus, sus, \rel, rel, \rate, rate, \grAtk, grAtk,
+		\grRel, grRel, \sinFreq, sinFreq, \sinAmp, sinAmp, \noiseFreq, noiseFreq, \noiseAmp, noiseAmp, \impulseFreq, impulseFreq,
 		\startPos, startPos, \impulseAmp, impulseAmp, \sawFreq, sawFreq, \sawAmp, sawAmp, \sampFreq, sampFreq, \sampAmp, sampAmp, \hipass, hipass])
 	}
 }
 
-	

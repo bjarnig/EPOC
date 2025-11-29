@@ -1,0 +1,55 @@
+
+BGenPyro : BGen
+{
+	var paramValues, reverb, effectBus, <>isPlaying, preControl;
+	*new { |id=0, description, duration=10, control, outBus=0, values, load=1|
+		^super.newCopyArgs(id, description, duration, control, outBus, nil, values).init(load);
+	}
+
+	init {|load=1|
+		this.setDescription;
+		this.isPlaying = 0;
+		this.control = BControl.new;
+		preControl = BControl.new;
+		if(load > 0, { this.initEffect.value });
+	}
+
+	setParam {|paramName, paramValue|
+	if(paramName == \duration, {duration = paramValue});
+	if(paramName == \outBus, {outBus = paramValue});
+	}
+
+	initEffect {
+		effectBus = Bus.audio(Server.local, 2);
+		reverb = Bwrap.new(\pyroCombi, [\in, effectBus, \out, outBus]);
+		reverb.play;
+	}
+
+	*loadSynthDefs {
+
+	 	SynthDef(\pyro,
+		{| out=0, freq1=80, freq2=90, freq3=100, speed=80, amp=0.5, atk=0.5, sus=1, rel=0.1, surface=0.0, color=0.5, entropy=0.0, entropyFreq=1, filter=1000, density=0.5, pan=0.0|
+	 	var env, osca, oscb, oscc, oscd, signal, speedMod;
+	 	env = EnvGen.kr(Env.new([0,1,1,0], [atk,sus,rel], 1), doneAction:2);
+	 	freq1= freq1 + (10 * LFNoise1.ar(freq:2*entropyFreq, add:1,  mul:entropy));
+	 	freq2= freq2 + (10 * LFNoise1.ar(freq:3*entropyFreq, add:1,  mul:entropy));
+	 	freq3= freq3 + (10 * LFNoise1.ar(freq:4*entropyFreq, add:1,  mul:entropy));
+	 	speedMod = ((speed * 2) * LFNoise1.ar(freq:8*entropyFreq, add:1, mul:entropy));
+		osca = DynKlank.ar(`[[freq1, freq1 * 2, freq1 * 3], nil, [0.5*color, 0.2*color, 0.2*color]], Impulse.ar(speed + speedMod));
+	 	oscb = DynKlank.ar(`[[freq2, freq2 * 2, freq2 * 3], nil, [0.5*color, 0.2*color, 0.2*color]], Impulse.ar((speed * 2) + speedMod, mul:density));
+	 	oscc = DynKlank.ar(`[[freq3, freq3 * 2, freq3 * 3], nil, [0.5*color, 0.2*color, 0.2*color]], Impulse.ar((speed * 8) + speedMod, mul:density));
+		signal = osca + oscb + oscc;
+		signal = signal * 0.1;
+		signal = BPeakEQ.ar(signal, filter, 8, 0.1 + 10 * surface);
+		signal = (signal * (1 - surface) + (signal.round(0.1) * (surface)));
+		signal = LeakDC.ar(signal);
+		signal = HPF.ar(signal, 70);
+		signal = signal * env;
+		signal = signal * amp;
+		signal = Pan2.ar(signal, pan);
+		Out.ar(out, signal);
+		}, [0.1, 0.1, 0.1, 0.1, 0.1, 0.1, 0.1, 0.1, 0.1, 0.1, 0.1, 0.1, 0.1, 0.1, 0.1, 0.1, 0.1]
+		).add;
+
+		SynthDef(\pyroCombi,
+		{| 

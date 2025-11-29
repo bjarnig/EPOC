@@ -1,16 +1,16 @@
 
 DOran : BGSoundObject
-{ 
+{
 	var <>buf, <>rate, <>trate, <>pos, <>atk, <>sus, <>rel, <>lopass, <>hipass;
-	
-	*new 
+
+	*new
 	{ |outBus=0, buf, rate=1, trate=12, pos=0.1, atk=4, sus=5, rel=6, amp=1, lopass=6000, hipass=80|
 	^super.newCopyArgs(nil, outBus, 0, amp, buf, rate, trate, pos, atk, sus, rel, lopass, hipass);
 	}
-		
-	*loadSynthDefs { 
-	
-		SynthDef(\oranGrain, 
+
+	*loadSynthDefs {
+
+		SynthDef(\oranGrain,
 		{|buf, rate=1, trate=12, pos=0.1, atk=4, sus=5, rel=6, amp=1, lopass=6000, hipass=80, out=0|
 		var dur, clk, pan, signal, env, filtEnv;
 		dur = 20 / trate;
@@ -26,8 +26,8 @@ DOran : BGSoundObject
 		Out.ar(out, signal);}
 		).add;
 	}
-	
-	play 
+
+	play
 	{
 		synth = Synth(\oranGrain, [\buf, buf, \pos, pos, \rate, rate, \trate, trate, \atk, atk,
 		\sus, sus, \rel, rel, \amp, amp, \lopass, lopass, \hipass, hipass, \out, outBus])

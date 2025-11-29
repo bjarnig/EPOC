@@ -1,31 +1,31 @@
 
-BSeq : BItem 
-{ 	
+BSeq : BItem
+{
 	*loadSynthDefs {
 	var children;
 	children = BSeq.subclasses;
-	children.do{|item| ('BSeq.loadSynthDefs: ' ++ item).postln; 
+	children.do{|item| ('BSeq.loadSynthDefs: ' ++ item).postln;
 	item.loadSynthDefs};
 	}
-	
-	play 
+
+	play
 	{
-		('BSeq.play (CHILD HAS NOT IMPLEMENTED)').postln; 
+		('BSeq.play (CHILD HAS NOT IMPLEMENTED)').postln;
 	}
-	
-	playDuration 
+
+	playDuration
 	{|pat|
-		
-		Routine 
+
+		Routine
 		{
-			1.do({arg b;	
+			1.do({arg b;
 			var rp = pat.play;
 			duration.wait;
 			rp.stop;
 		})
 		}.play;
 	}
-	
+
 	playFunction {
 		^{this.play};
 	}

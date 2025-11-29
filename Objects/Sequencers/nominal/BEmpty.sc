@@ -1,34 +1,34 @@
 
 BEmpty : BSeq
 {
-	var isPlaying; 
-	
+	var isPlaying;
+
 	*new { |id=0, description, duration, control, outBus=0|
-		
-		^super.newCopyArgs(id, description, duration, control, outBus).init(); 
+
+		^super.newCopyArgs(id, description, duration, control, outBus).init();
 	}
-	
+
 	init {
-		
+
 		this.setDescription;
 		isPlaying = 0;
 	}
-	
+
 	*loadSynthDefs {
-	}	
-	
-	update {	
 	}
-	
+
+	update {
+	}
+
 	play {
 		this.update.value;
 	}
-	
-	playDuration 
-	{	
-		Routine 
+
+	playDuration
+	{
+		Routine
 		{
-			1.do({	
+			1.do({
 			duration.wait;
 			isPlaying = 0;
 		})
@@ -36,15 +36,15 @@ BEmpty : BSeq
 	}
 
 	stop {
-		
-		Routine 
+
+		Routine
 		{
-			1.do({	
+			1.do({
 			isPlaying = 0;
 		})
 		}.play;
 	}
-	
+
 	setDescription {
 		description = "";
 	}
