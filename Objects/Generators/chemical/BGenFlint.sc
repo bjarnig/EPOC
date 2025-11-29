@@ -37,7 +37,7 @@ BGenFlint : BGen
 	initEffect {
 		effectBus = Bus.audio(Server.local, 2);
 		reverb = Bwrap.new(\flintVerb, [\in, effectBus, \out, outBus]);
- 		reverb.play;
+		reverb.play;
 	}
 
 	readFiles {arg path;
@@ -47,7 +47,7 @@ BGenFlint : BGen
 		buffers = files.collect { |sf| var b;
 		b = Buffer.read(Server.local, sf.path);};
 		buffers;
- 		^buffers;
+		^buffers;
 	}
 
 	*loadSynthDefs {
@@ -68,7 +68,7 @@ BGenFlint : BGen
 		signal = (RLPF.ar(signal, lop, 1.15) * (1-surface)) + (RHPF.ar(signal, hip, 1.15) * surface);
 		signal = (signal * 0.75) + (signal * ((SinOsc.ar(speed*0.5, 0.5, 0.5) * 0.25)));
 		signal = (signal * (1 - (density * 0.5)) * 1.75);
- 		signal = signal * EnvGen.ar(Env.new([0, 1, 1, 0],[atk, sus, rel], [-4, 1, -1]));
+		signal = signal * EnvGen.ar(Env.new([0, 1, 1, 0],[atk, sus, rel], [-4, 1, -1]));
 		Out.ar(outBus, signal);
 		}).add;
 

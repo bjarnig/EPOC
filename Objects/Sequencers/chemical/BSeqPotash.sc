@@ -19,8 +19,8 @@ BSeqPotash : BSeq
 		reverb = Bwrap.new(\potashEffect, [\inBus, effectBus, \outBus, outBus]);
 		reverb.play;
 		durations = durs;
- 		amplitudes = amps;
- 		frequencies = freqs;
+		amplitudes = amps;
+		frequencies = freqs;
 		if(durations.isNil, {durations = [8, 6, 5, 7, 9, 4, 6, 0.2, 0.4]});
 		if(amplitudes.isNil, {amplitudes = [1.0, 1.0, 1.0, 1.0, 1.0, 1.0, 1.0, 1.0]});
 		if(frequencies.isNil, {frequencies = [1.0, 0.298, 1.22, 0.96, 1.04, 0.5, 2.0]});
@@ -89,8 +89,8 @@ BSeqPotash : BSeq
 			if(control.density != preControl.density, {proxyAtk.source = grAtk; proxySus.source = grSus; proxyRel.source = grRel});
 			if(control.speed != preControl.speed || control.position != preControl.position, {proxyDurations.source = speedDurs; proxyAmplitudes.source = speedAmps;proxyVibFreq.source = vib});
 			if(control.frequency != preControl.frequency, {proxyRate.source = ratePattern});
- 			if(control.position != preControl.position, {proxyPos.source = pos});
- 			if(control.entropy != preControl.entropy, {proxyVibAmt.source = vibAmt});
+			if(control.position != preControl.position, {proxyPos.source = pos});
+			if(control.entropy != preControl.entropy, {proxyVibAmt.source = vibAmt});
 		},
 		{
 			('Potash start'.postln);

@@ -38,7 +38,7 @@ BLPat2 : BGen
 	initEffect {
 		effectBus = Bus.audio(Server.local, 2);
 		reverb = Bwrap.new(\bLPat2Verb, [\in, effectBus, \out, outBus]);
- 		reverb.play;
+		reverb.play;
 	}
 
 	readFiles {arg path;
@@ -48,7 +48,7 @@ BLPat2 : BGen
 		buffers = files.collect { |sf| var b;
 		b = Buffer.read(Server.local, sf.path);};
 		buffers;
- 		^buffers;
+		^buffers;
 	}
 
 	*loadSynthDefs {
@@ -78,7 +78,7 @@ BLPat2 : BGen
 		signal = (signal * 0.5) + (formlet * 0.5);
 		signal = signal * envAmpMod;
 		signal = BPeakEQ.ar(signal, hiEqFreq, 12, hiEqAmt) + BPeakEQ.ar(signal, loEqFreq, 12, loEqAmt);
- 		signal = signal * EnvGen.ar(Env.new([0, 1, 1, 0],[atk, sus, rel], [-4, 1, -1]));
+		signal = signal * EnvGen.ar(Env.new([0, 1, 1, 0],[atk, sus, rel], [-4, 1, -1]));
 		Out.ar(outBus, signal);
 		}).add;
 
